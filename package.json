@@ -1,0 +1,23 @@
+{
+  "name": "ilusao",
+  "version": "1.0.0",
+  "description": "A psychological horror game based on Brazilian folklore",
+  "author": "Guilherme Honorato",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^34.5.8",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.ilusao.game",
+    "productName": "ILUSÃO",
+    "win": {
+      "target": "nsis",
+      "icon": "images/icon.png"
+    }
+  }
+}

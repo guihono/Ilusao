@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ILUSÃO — Trailer</title>
+<link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: #000;
+    overflow: hidden;
+    font-family: "Georgia", serif;
+    color: #d8f3dc;
+  }
+
+  /* ── FOREST BACKGROUND ── */
+  #forest-bg {
+    position: fixed;
+    inset: 0;
+    background: #0b1d13;
+    z-index: 0;
+    transition: background 2s ease;
+  }
+
+  #forest-bg::before {
+    content: "";
+    position: absolute;
+    inset: -30%;
+    background: radial-gradient(circle at 40% 60%, rgba(82,183,136,0.35), transparent 60%);
+    animation: forestDrift 10s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  #forest-bg::after {
+    content: "";
+    position: absolute;
+    inset: -30%;
+    background: radial-gradient(circle at 70% 30%, rgba(20,60,40,0.6), transparent 70%);
+    animation: forestDrift 14s ease-in-out infinite reverse;
+    pointer-events: none;
+  }
+
+  /* ── FIRE GLOW OVERLAY ── */
+  #fire-glow {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 85%,
+      rgba(255,120,35,0.35), transparent 40%);
+    opacity: 0;
+    transition: opacity 3s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── DISTORTION OVERLAY ── */
+  #distortion {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+    transition: opacity 2s ease;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+  }
+
+  /* ── STAGE ── */
+  #stage {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    padding: 40px;
+    text-align: center;
+  }
+
+  /* ── TEXT ── */
+  .line {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    padding: 0 40px;
+  }
+
+  .line.detective {
+    font-style: italic;
+    font-size: clamp(16px, 2.2vw, 22px);
+    color: #d8f3dc;
+    line-height: 1.9;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 12px rgba(0,0,0,0.9);
+  }
+
+  .line.detective .fragment {
+    display: block;
+  }
+
+  .line.clue {
+    font-family: "Courier New", monospace;
+    font-size: clamp(13px, 1.6vw, 17px);
+    color: #b7e4c7;
+    background: rgba(0,0,0,0.55);
+    border-left: 2px solid #52b788;
+    padding: 14px 24px;
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: left;
+    line-height: 1.6;
+    text-shadow: none;
+  }
+
+  .line.interview {
+    font-size: clamp(14px, 1.8vw, 19px);
+    color: #c8ddc8;
+    line-height: 1.7;
+    text-shadow: 0 0 10px rgba(0,0,0,0.9);
+  }
+
+  .line.interview .speaker {
+    color: #52b788;
+    font-style: normal;
+    font-size: 0.85em;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .line.creature {
+    font-family: 'Uncial Antiqua', serif;
+    font-size: clamp(22px, 4vw, 44px);
+    color: #d8f3dc;
+    letter-spacing: 4px;
+    text-shadow:
+      0 0 8px rgba(82,183,136,0.6),
+      0 0 20px rgba(0,0,0,0.9);
+  }
+
+  .line.creature.fire-creature {
+    color: #f8e6c6;
+    text-shadow:
+      0 0 10px rgba(255,120,40,0.7),
+      0 0 25px rgba(0,0,0,0.9);
+  }
+
+  .line.title-line {
+    font-family: 'Uncial Antiqua', serif;
+    font-size: clamp(48px, 8vw, 96px);
+    color: #d4af37;
+    letter-spacing: 10px;
+    text-shadow:
+      0 0 8px rgba(212,175,55,0.5),
+      0 0 30px rgba(0,0,0,0.9);
+  }
+
+  .line.subtitle {
+    font-size: clamp(13px, 1.5vw, 16px);
+    color: #888;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .line.question {
+    font-style: italic;
+    font-size: clamp(18px, 2.5vw, 28px);
+    color: #d8f3dc;
+    line-height: 1.8;
+    text-shadow: 0 0 15px rgba(0,0,0,0.9);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes forestDrift {
+    0%   { transform: translate(0px,0px); opacity: 0.35; }
+    50%  { transform: translate(-10px,5px); opacity: 0.25; }
+    100% { transform: translate(0px,0px); opacity: 0.35; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-6px); }
+  }
+
+  @keyframes flickerIn {
+    0%   { opacity: 0; }
+    20%  { opacity: 0.4; }
+    40%  { opacity: 0.1; }
+    60%  { opacity: 0.7; }
+    80%  { opacity: 0.3; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes creatureFlash {
+    0%   { opacity: 0; letter-spacing: 8px; }
+    30%  { opacity: 1; letter-spacing: 4px; }
+    70%  { opacity: 1; letter-spacing: 4px; }
+    100% { opacity: 0; letter-spacing: 2px; }
+  }
+
+  @keyframes rumbleShake {
+    0%,100% { transform: translate(0,0); }
+    20%     { transform: translate(-2px,1px); }
+    40%     { transform: translate(2px,-1px); }
+    60%     { transform: translate(-1px,2px); }
+    80%     { transform: translate(1px,-2px); }
+  }
+
+  @keyframes titleReveal {
+    0%   { opacity: 0; letter-spacing: 20px; filter: blur(4px); }
+    100% { opacity: 1; letter-spacing: 10px; filter: blur(0); }
+  }
+
+  @keyframes distortPulse {
+    0%,100% { transform: skewX(0deg); }
+    50%     { transform: skewX(0.4deg); }
+  }
+
+  /* ── REPLAY BUTTON ── */
+  #replay {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 1s ease;
+    color: #52b788;
+    font-family: "Georgia", serif;
+    font-style: italic;
+    font-size: 15px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-decoration: none;
+  }
+
+  #replay:hover { color: #b7e4c7; }
+
+  /* ── VIGNETTE ── */
+  #vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center,
+      transparent 50%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+    z-index: 5;
+  }
+</style>
+</head>
+<body>
+
+<div id="forest-bg"></div>
+<div id="fire-glow"></div>
+<div id="distortion"></div>
+<div id="vignette"></div>
+<div id="stage"></div>
+<button id="replay">[ watch again ]</button>
+
+<audio id="audio-forest" loop>
+  <source src="media/forest.wav" type="audio/wav">
+</audio>
+<audio id="audio-horror" loop>
+  <source src="media/horror.wav" type="audio/wav">
+</audio>
+<audio id="audio-fire">
+  <source src="media/fire.mp3" type="audio/mpeg">
+  <source src="sounds/fire.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const stage = document.getElementById('stage');
+const forestBg = document.getElementById('forest-bg');
+const fireGlow = document.getElementById('fire-glow');
+const distortion = document.getElementById('distortion');
+const replayBtn = document.getElementById('replay');
+const audioForest = document.getElementById('audio-forest');
+const audioHorror = document.getElementById('audio-horror');
+const audioFire = document.getElementById('audio-fire');
+
+// ── HELPERS ──────────────────────────────────────────────
+function clear() {
+  stage.innerHTML = '';
+}
+
+function show(html, className, duration, animIn = 'fadeIn', animOut = 'fadeOut') {
+  return new Promise(resolve => {
+    const el = document.createElement('div');
+    el.className = `line ${className}`;
+    el.innerHTML = html;
+    el.style.animation = `${animIn} 1s ease forwards`;
+    stage.appendChild(el);
+
+    setTimeout(() => {
+      el.style.animation = `${animOut} 0.8s ease forwards`;
+      setTimeout(() => {
+        el.remove();
+        resolve();
+      }, 800);
+    }, duration);
+  });
+}
+
+function showCreature(name, isFire = false) {
+  return new Promise(resolve => {
+    const el = document.createElement('div');
+    el.className = `line creature${isFire ? ' fire-creature' : ''}`;
+    el.textContent = name;
+    el.style.animation = 'creatureFlash 1.4s ease forwards';
+    stage.appendChild(el);
+    setTimeout(() => { el.remove(); resolve(); }, 1400);
+  });
+}
+
+function wait(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+function setForestIntensity(level) {
+  // level 1-4 matching game's forest stages
+  const intensities = [
+    'radial-gradient(circle at 40% 60%, rgba(82,183,136,0.35), transparent 60%)',
+    'radial-gradient(circle at 40% 60%, rgba(82,183,136,0.5), transparent 55%)',
+    'radial-gradient(circle at 40% 60%, rgba(82,183,136,0.65), transparent 50%)',
+    'radial-gradient(circle at 40% 60%, rgba(82,183,136,0.8), transparent 45%)',
+  ];
+  forestBg.style.setProperty('--intensity', intensities[level - 1]);
+}
+
+function fadeAudio(el, targetVol, durationMs) {
+  const steps = 30;
+  const interval = durationMs / steps;
+  const delta = (targetVol - el.volume) / steps;
+  const tick = setInterval(() => {
+    el.volume = Math.min(1, Math.max(0, el.volume + delta));
+    if ((delta > 0 && el.volume >= targetVol) ||
+        (delta < 0 && el.volume <= targetVol)) {
+      el.volume = targetVol;
+      clearInterval(tick);
+    }
+  }, interval);
+}
+
+// ── MAIN SEQUENCE ─────────────────────────────────────────
+async function play() {
+  clear();
+  replayBtn.style.opacity = '0';
+  replayBtn.style.pointerEvents = 'none';
+  distortion.style.opacity = '0';
+  fireGlow.style.opacity = '0';
+  forestBg.style.background = '#0b1d13';
+
+  // Start forest audio quietly
+  try {
+    audioForest.volume = 0;
+    await audioForest.play();
+    fadeAudio(audioForest, 0.35, 3000);
+  } catch(e) {}
+
+  // ── BEAT 1: Opening darkness (0–8s) ──
+  await wait(1200);
+  await show(
+    `<span class="fragment">1973.</span>
+     <span class="fragment">Rural São Paulo.</span>
+     <span class="fragment">Nine people have disappeared.</span>`,
+    'detective', 4500
+  );
+
+  // ── BEAT 2: The case (8–18s) ──
+  await wait(400);
+  await show(
+    `<span class="speaker">[Lieutenant]</span>
+     This is a SN case. Good luck. Be careful.`,
+    'interview', 3500
+  );
+
+  await wait(200);
+  await show(
+    `<span class="fragment">I know I am not ready for this.</span>
+     <span class="fragment">But it is my job.</span>
+     <span class="fragment">I have let something like this happen once.</span>
+     <span class="fragment">I am not going to let it happen again.</span>`,
+    'detective', 4500
+  );
+
+  // ── BEAT 3: Investigation glimpse (18–30s) ──
+  await wait(400);
+
+  // Clue flash
+  await show(
+    `CLUE ADDED — <em>Every one of them heard a different sound. Something tailored. Something personal.</em>`,
+    'clue', 3200, 'fadeIn', 'fadeOut'
+  );
+
+  await wait(300);
+  await show(
+    `<span class="speaker">[Ms. Braga]</span>
+     Pay attention to the details of what you see and hear.<br>
+     What is real and what is not is just a small difference in details.`,
+    'interview', 3800
+  );
+
+  // ── BEAT 4: Forest descent begins (30–42s) ──
+  await wait(400);
+  fadeAudio(audioForest, 0.6, 2000);
+
+  // Intensify forest
+  forestBg.style.transition = 'background 3s ease';
+  forestBg.style.background = 'radial-gradient(circle at 50% 55%, rgba(20,90,55,0.4), transparent 50%), #0b1d13';
+  distortion.style.opacity = '0.4';
+
+  await show(
+    `<span class="fragment">The forest does not feel like a place.</span>
+     <span class="fragment">It feels like something</span>
+     <span class="fragment">that is watching me</span>
+     <span class="fragment">enter it.</span>`,
+    'detective', 5000
+  );
+
+  await wait(300);
+
+  // Start horror audio
+  try {
+    audioHorror.volume = 0;
+    await audioHorror.play();
+    fadeAudio(audioHorror, 0.25, 2500);
+  } catch(e) {}
+
+  forestBg.style.background = 'radial-gradient(circle at 50% 55%, rgba(20,90,55,0.6), transparent 45%), #080f0b';
+  distortion.style.opacity = '0.7';
+  distortion.style.animation = 'distortPulse 4s ease-in-out infinite';
+
+  await show(
+    `<span class="fragment">Something is creating this.</span>
+     <span class="fragment">Or worse.</span>
+     <span class="fragment">Something is making me believe</span>
+     <span class="fragment">it is real.</span>`,
+    'detective', 5000
+  );
+
+  // ── BEAT 5: Creature flashes (42–52s) ──
+  await wait(300);
+
+  // Forest goes dark, fire begins
+  forestBg.style.background = '#050505';
+  fireGlow.style.opacity = '1';
+  try {
+    audioFire.volume = 0.2;
+    audioFire.play();
+  } catch(e) {}
+
+  await showCreature('CUCA');
+  await wait(100);
+  await showCreature('BICHO-PAPÃO');
+  await wait(100);
+  await showCreature('IARA');
+  await wait(100);
+  await showCreature('MULA SEM CABEÇA');
+  await wait(100);
+  await showCreature('COBRA NORATO');
+  await wait(100);
+  await showCreature('BOITATÁ', true);
+  await wait(200);
+
+  // Screen shake before the question
+  document.body.style.animation = 'rumbleShake 0.4s ease';
+  await wait(400);
+  document.body.style.animation = '';
+
+  // ── BEAT 6: Final question (52–58s) ──
+  forestBg.style.background = '#020202';
+  fireGlow.style.opacity = '0.5';
+  distortion.style.opacity = '0';
+  fadeAudio(audioHorror, 0.5, 1500);
+
+  await wait(500);
+
+  await show(
+    `<span class="fragment">It was never about the missing people.</span>
+     <span class="fragment">It was always going to end</span>
+     <span class="fragment">with something you lost.</span>`,
+    'question', 5500, 'flickerIn', 'fadeOut'
+  );
+
+  // ── BEAT 7: Title card (58–65s) ──
+  await wait(600);
+  fadeAudio(audioForest, 0.1, 2000);
+  fadeAudio(audioHorror, 0.1, 2000);
+
+  const titleEl = document.createElement('div');
+  titleEl.className = 'line title-line';
+  titleEl.textContent = 'ILUSÃO';
+  titleEl.style.animation = 'titleReveal 2s ease forwards';
+  stage.appendChild(titleEl);
+
+  await wait(1200);
+
+  const subEl = document.createElement('div');
+  subEl.className = 'line subtitle';
+  subEl.style.top = 'calc(50% + 70px)';
+  subEl.style.animation = 'fadeIn 1.5s ease 0.5s forwards';
+  subEl.textContent = 'A psychological horror story';
+  stage.appendChild(subEl);
+
+  await wait(3500);
+
+  // Show replay
+  replayBtn.style.opacity = '1';
+  replayBtn.style.pointerEvents = 'auto';
+}
+
+replayBtn.addEventListener('click', () => {
+  audioForest.pause(); audioForest.currentTime = 0;
+  audioHorror.pause(); audioHorror.currentTime = 0;
+  audioFire.pause(); audioFire.currentTime = 0;
+  play();
+});
+
+// Start on click — required by browsers before audio can play
+window.addEventListener('load', () => {
+  const overlay = document.createElement('div');
+  overlay.id = 'start-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 1.5em;
+  `;
+
+  const title = document.createElement('div');
+  title.textContent = 'ILUSÃO';
+  title.style.cssText = `
+    font-family: 'Uncial Antiqua', serif;
+    font-size: 3.5em;
+    color: #f5e6c8;
+    letter-spacing: 0.15em;
+    opacity: 0;
+    animation: appear 1.5s ease forwards 0.5s;
+  `;
+
+  const prompt = document.createElement('div');
+  prompt.textContent = '[ click to watch ]';
+  prompt.style.cssText = `
+    font-family: 'Uncial Antiqua', serif;
+    font-size: 1em;
+    color: #f5e6c8;
+    letter-spacing: 0.2em;
+    opacity: 0;
+    animation: appear 1.5s ease forwards 1.2s;
+  `;
+
+  overlay.appendChild(title);
+  overlay.appendChild(prompt);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', () => {
+    overlay.style.transition = 'opacity 0.8s';
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.remove();
+      play();
+    }, 800);
+  });
+});
+</script>
+</body>
+</html>
